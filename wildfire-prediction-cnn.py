@@ -26,34 +26,32 @@ import matplotlib.pyplot as plt
 import os
 import cv2
 
+def load_limited_images(dir_path, percent=0.1):
+    x = []
+    y = []
+    for direct in os.listdir(dir_path):
+        print(f"Loading dataset {dir_path} {direct}")
+        class_dir = os.path.join(dir_path, direct)
+        all_files = os.listdir(class_dir)
+        sample_size = max(1, int(len(all_files) * percent))
+        sampled_files = random.sample(all_files, sample_size)
+        for filename in sampled_files:
+            img_path = os.path.join(class_dir, filename)
+            img = cv2.imread(img_path)
+            img = cv2.resize(img, (32,32))
+            img = np.array(img)
+            img = img/255
+            x.append(img)
+            y.append(direct)
+    return x, y
+
+# Use 10% of images from each class for training and validation
 dir = '/kaggle/input/wildfire-prediction-dataset/train'
-x = []
-y = []
-for direct in os.listdir(dir):
-    print("Loading dataset training {}".format(direct))
-    for filename in os.listdir(os.path.join(dir,direct)):
-        img_path = os.path.join(dir,direct,filename)
-        img = cv2.imread(img_path)
-        img = cv2.resize(img, (32,32))
-        img = np.array(img)
-        img = img/255
-        x.append(img)
-        y.append(direct)
+x, y = load_limited_images(dir, percent=0.1)
 
 
 dir_val = '/kaggle/input/wildfire-prediction-dataset/valid'
-x_val=[]
-y_val=[]
-for direct in os.listdir(dir_val):
-    print("Loading dataset validation {}".format(direct))
-    for filename in os.listdir(os.path.join(dir_val,direct)):
-        img_path = os.path.join(dir_val,direct,filename)
-        image = cv2.imread(img_path)
-        image = cv2.resize(image,(32,32))
-        image = np.array(image)
-        image = image/255
-        x_val.append(image)
-        y_val.append(direct)
+x_val, y_val = load_limited_images(dir_val, percent=0.1)
 
 from sklearn.preprocessing import LabelEncoder
 from tensorflow.keras.utils import to_categorical

@@ -11,36 +11,33 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report, accuracy_score, confusion_matrix
 from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
+import random
 
-# === Carregando imagens de treino ===
+def load_limited_images_flatten(dir_path, percent=0.1):
+    x = []
+    y = []
+    for direct in os.listdir(dir_path):
+        print(f"Loading dataset {dir_path} {direct}")
+        class_dir = os.path.join(dir_path, direct)
+        all_files = os.listdir(class_dir)
+        sample_size = max(1, int(len(all_files) * percent))
+        sampled_files = random.sample(all_files, sample_size)
+        for filename in sampled_files:
+            img_path = os.path.join(class_dir, filename)
+            img = cv2.imread(img_path)
+            img = cv2.resize(img, (32,32))
+            img = img / 255.0
+            x.append(img.flatten())
+            y.append(direct)
+    return x, y
+
+# === Carregando imagens de treino (apenas 10%) ===
 dir = '/kaggle/input/wildfire-prediction-dataset/train'
-x = []
-y = []
+x, y = load_limited_images_flatten(dir, percent=0.1)
 
-for direct in os.listdir(dir):
-    print("Loading dataset training {}".format(direct))
-    for filename in os.listdir(os.path.join(dir,direct)):
-        img_path = os.path.join(dir,direct,filename)
-        img = cv2.imread(img_path)
-        img = cv2.resize(img, (32,32))
-        img = img / 255.0
-        x.append(img.flatten())  # <-- transforma a imagem 32x32x3 em um vetor 1D
-        y.append(direct)
-
-# === Carregando imagens de validação ===
+# === Carregando imagens de validação (apenas 10%) ===
 dir_val = '/kaggle/input/wildfire-prediction-dataset/valid'
-x_val = []
-y_val = []
-
-for direct in os.listdir(dir_val):
-    print("Loading dataset validation {}".format(direct))
-    for filename in os.listdir(os.path.join(dir_val,direct)):
-        img_path = os.path.join(dir_val,direct,filename)
-        img = cv2.imread(img_path)
-        img = cv2.resize(img, (32,32))
-        img = img / 255.0
-        x_val.append(img.flatten())
-        y_val.append(direct)
+x_val, y_val = load_limited_images_flatten(dir_val, percent=0.1)
 
 # === Pré-processamento dos rótulos ===
 le = LabelEncoder()
@@ -74,3 +71,17 @@ imgplot = plt.imshow(cv2.cvtColor(cv2.imread(test_img_path), cv2.COLOR_BGR2RGB))
 plt.title(f"Classe prevista: {predicted_class}")
 plt.axis('off')
 plt.show()
+
+# === Análise de erros: mostrar imagens mal classificadas ===
+misclassified_idx = [i for i, (true, pred) in enumerate(zip(y_val_encoded, y_pred_val)) if true != pred]
+print(f"Total de imagens mal classificadas: {len(misclassified_idx)}")
+
+for idx in misclassified_idx[:5]:  # Mostra até 5 exemplos
+    img_flat = x_val[idx]
+    img = img_flat.reshape(32, 32, 3)
+    true_label = le.inverse_transform([y_val_encoded[idx]])[0]
+    pred_label = le.inverse_transform([y_pred_val[idx]])[0]
+    plt.imshow(img)
+    plt.title(f"Verdadeiro: {true_label} | Previsto: {pred_label}")
+    plt.axis('off')
+    plt.show()
