@@ -87,7 +87,7 @@ clf.fit(X_train, y_train_enc)
 importances = clf.feature_importances_
 plt.figure(figsize=(8,3))
 plt.plot(importances)
-plt.title('Importância das Features (Histograma de Cores)')
+plt.title('Random Forest - Importância das Features (Histograma de Cores)')
 plt.xlabel('Índice da Feature')
 plt.ylabel('Importância')
 plt.tight_layout()
@@ -100,7 +100,7 @@ print("\n=== Avaliação no Conjunto de Treinamento ===")
 print("Classification Report:\n", classification_report(y_train_enc, y_pred_train, target_names=le.classes_))
 fig, ax = plt.subplots()
 ConfusionMatrixDisplay.from_predictions(y_train_enc, y_pred_train, display_labels=le.classes_, cmap=plt.cm.Blues, ax=ax)
-plt.title('Matriz de Confusão - Treinamento')
+plt.title('Random Forest - Matriz de Confusão - Treinamento')
 plt.show()
 if len(le.classes_) == 2:
     auc_train = roc_auc_score(y_train_enc, y_pred_train_proba)
@@ -110,7 +110,7 @@ if len(le.classes_) == 2:
     plt.plot([0,1],[0,1],'k--')
     plt.xlabel('False Positive Rate')
     plt.ylabel('True Positive Rate')
-    plt.title('Curva ROC - Treinamento')
+    plt.title('Random Forest - Curva ROC - Treinamento')
     plt.legend()
     plt.show()
 
@@ -121,7 +121,7 @@ print("\n=== Avaliação no Conjunto de Validação ===")
 print("Classification Report:\n", classification_report(y_val_enc, y_pred_val, target_names=le.classes_))
 fig, ax = plt.subplots()
 ConfusionMatrixDisplay.from_predictions(y_val_enc, y_pred_val, display_labels=le.classes_, cmap=plt.cm.Blues, ax=ax)
-plt.title('Matriz de Confusão - Validação')
+plt.title('Random Forest - Matriz de Confusão - Validação')
 plt.show()
 if len(le.classes_) == 2:
     auc_val = roc_auc_score(y_val_enc, y_pred_val_proba)
@@ -131,7 +131,7 @@ if len(le.classes_) == 2:
     plt.plot([0,1],[0,1],'k--')
     plt.xlabel('False Positive Rate')
     plt.ylabel('True Positive Rate')
-    plt.title('Curva ROC - Validação')
+    plt.title('Random Forest - Curva ROC - Validação')
     plt.legend()
     plt.show()
 
@@ -142,7 +142,7 @@ print("\n=== Avaliação no Conjunto de Teste ===")
 print("Classification Report:\n", classification_report(y_test_enc, y_pred_test, target_names=le.classes_))
 g, ax = plt.subplots()
 ConfusionMatrixDisplay.from_predictions(y_test_enc, y_pred_test, display_labels=le.classes_, cmap=plt.cm.Blues, ax=ax)
-plt.title('Matriz de Confusão - Teste')
+plt.title('Random Forest - Matriz de Confusão - Teste')
 plt.show()
 if len(le.classes_) == 2:
     auc_test = roc_auc_score(y_test_enc, y_pred_test_proba)
@@ -152,7 +152,7 @@ if len(le.classes_) == 2:
     plt.plot([0,1],[0,1],'k--')
     plt.xlabel('False Positive Rate')
     plt.ylabel('True Positive Rate')
-    plt.title('Curva ROC - Teste')
+    plt.title('Random Forest - Curva ROC - Teste')
     plt.legend()
     plt.show()
 
@@ -186,7 +186,7 @@ rects2 = ax.bar(x, f1s, width, label='F1-score')
 rects3 = ax.bar(x + width, aucs, width, label='AUC')
 
 ax.set_ylabel('Pontuação')
-ax.set_title('Comparação das principais métricas por conjunto')
+ax.set_title('Random Forest - Comparação das principais métricas por conjunto')
 ax.set_xticks(x)
 ax.set_xticklabels(labels)
 ax.legend()
@@ -204,7 +204,7 @@ plt.show()
 
 # === Exemplos de classificação da rede neural (Random Forest) ===
 # Mostra algumas imagens do conjunto de teste, o rótulo real e o previsto
-print("\nExemplos de classificação no conjunto de teste:")
+print("\nRandom Forest - Exemplos de classificação no conjunto de teste:")
 num_examples = 5
 for i in range(num_examples):
     idx = np.random.randint(0, len(X_test))
