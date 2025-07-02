@@ -1,6 +1,6 @@
 # =========================================
 # Projeto: Detecção de Queimadas com Aprendizado de Máquina
-# Algoritmo: Rede Neural Convolucional (CNN)
+# Algoritmo: CNN
 # =========================================
 
 import kagglehub
@@ -44,8 +44,7 @@ def load_limited_images(dir_path, percent=0.1, return_paths=False):
         return x, y, paths
     return x, y
 
-# === Carregamento dos dados ===
-# Utiliza 10% das imagens de cada classe para reduzir o dataset
+# === Carregando imagens de treino, validação e teste ===
 train_dir = '/kaggle/input/wildfire-prediction-dataset/train'
 val_dir = '/kaggle/input/wildfire-prediction-dataset/valid'
 test_dir = '/kaggle/input/wildfire-prediction-dataset/test'
@@ -175,7 +174,6 @@ import numpy as np
 
 # Calcula métricas
 f1_train = f1_score(Y_train_enc, Y_pred_train_classes)
-# Corrigido: calcular predição para validação
 Y_pred_val = model.predict(X_val)
 y_val_pred_classes = np.argmax(Y_pred_val, axis=1)
 f1_val = f1_score(Y_val_enc, y_val_pred_classes)
@@ -210,7 +208,7 @@ for rect in rects1 + rects2 + rects3:
     height = rect.get_height()
     ax.annotate(f'{height:.2f}',
                 xy=(rect.get_x() + rect.get_width() / 2, height),
-                xytext=(0, 3),  # 3 points vertical offset
+                xytext=(0, 3),
                 textcoords="offset points",
                 ha='center', va='bottom')
 

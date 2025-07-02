@@ -1,6 +1,6 @@
 # =========================================
 # Projeto: Detecção de Queimadas com Aprendizado de Máquina
-# Algoritmo: Random Forest com Extração de Atributos (Histograma de Cores)
+# Algoritmo: Random Forest com Extração de Atributos
 # =========================================
 
 import kagglehub
@@ -48,7 +48,7 @@ def load_images_with_features(dir_path, percent=0.1, return_paths=False):
         return np.array(x), np.array(y), np.array(paths)
     return np.array(x), np.array(y)
 
-# === Carregando imagens de treino, validação e teste (apenas 10%) ===
+# === Carregando imagens de treino, validação e teste ===
 dir_train = '/kaggle/input/wildfire-prediction-dataset/train'
 dir_val = '/kaggle/input/wildfire-prediction-dataset/valid'
 dir_test = '/kaggle/input/wildfire-prediction-dataset/test'
@@ -157,7 +157,6 @@ if len(le.classes_) == 2:
     plt.show()
 
 # === Bloco de comparação dos resultados ===
-# Gráfico comparativo das principais métricas
 from sklearn.metrics import f1_score
 import numpy as np
 
@@ -195,7 +194,7 @@ for rect in rects1 + rects2 + rects3:
     height = rect.get_height()
     ax.annotate(f'{height:.2f}',
                 xy=(rect.get_x() + rect.get_width() / 2, height),
-                xytext=(0, 3),  # 3 points vertical offset
+                xytext=(0, 3),
                 textcoords="offset points",
                 ha='center', va='bottom')
 
@@ -203,7 +202,6 @@ plt.ylim(0, 1.05)
 plt.show()
 
 # === Exemplos de classificação da rede neural (Random Forest) ===
-# Mostra algumas imagens do conjunto de teste, o rótulo real e o previsto
 print("\nRandom Forest - Exemplos de classificação no conjunto de teste:")
 num_examples = 5
 for i in range(num_examples):
